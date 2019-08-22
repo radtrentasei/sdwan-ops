@@ -1,0 +1,59 @@
+- name: Manipulate Banner Feature Template
+  hosts: localhost
+  connection: local
+  roles:
+    - ansible-viptela
+  vars:
+    vmanage_port: 443
+  gather_facts: no
+  tasks:
+    - assert:
+        that:
+          - vmanage_host is defined and vmanage_host
+          - vmanage_user is defined and vmanage_host
+          - vmanage_password is defined and vmanage_host
+          - vmanage_port is defined and vmanage_host
+        fail_msg: "vmanage_host, vmanage_port, vmanage_user, and vmanage_password must be defined"
+
+    - name: Create Banner Feature Template
+      include_role:
+        name: ansible-viptela
+        tasks_from: feature-banner
+      vars:
+        ansible_user: "{{vmanage_user}}"
+        ansible_host: "{{vmanage_host}}"
+        ansible_port: "{{vmanage_port}}"
+        ansible_password: "{{vmanage_password}}"
+        Feature_Templates:
+          Banner_Templates:
+            - templateName: 'Feature_Banner_1'
+              templateDescription: 'This is created from Ansible'
+              login: 'Hello'
+              motd: 'World'
+              state: 'present'
+            - templateName: 'Feature_Banner_2'
+              templateDescription: 'This is created from Ansible'
+              login: 'Hello'
+              motd: 'World'
+              state: 'present'
+            - templateName: 'Feature_Banner_3'
+              templateDescription: 'This is created from Ansible'
+              login: 'Hello'
+              motd: 'World'
+              state: 'present'
+
+    - name: Delete Banner Feature Template
+      include_role:
+        name: ansible-viptela
+        tasks_from: feature-banner
+      vars:
+        ansible_user: "{{vmanage_user}}"
+        ansible_host: "{{vmanage_host}}"
+        ansible_port: "{{vmanage_port}}"
+        ansible_password: "{{vmanage_password}}"
+        Feature_Templates:
+          Banner_Templates:
+            - templateName: 'Feature_Banner_1'
+              state: 'absent'
+            - templateName: 'Feature_Banner_4'
+              state: 'absent'
